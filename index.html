@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Page</title>
+  <style>
+   
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+    
+      background-image: url("back.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: #333;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+    }
+
+   
+    .search-container {
+      max-width: 800px;
+      width: 100%;
+      background: #ffffff47;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .search-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .search-box input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 1px solid #41c0d725;
+      background-color: #fbfeffa1;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .search-box input[type="text"]:focus {
+      border-color: #41c0d725;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.196);
+    }
+
+    .search-box select {
+      padding: 12px;
+      font-size: 16px;
+      background-color: #fbfeffa1;
+      border: 1px solid #41c0d725;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .search-box select:focus {
+      border-color: #007bff36;
+      background-color: #007bff36;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    }
+
+    .results-container {
+      margin-top: 20px;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .result-item {
+      background: #41c0d725;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-item:hover {
+        background: #4193d744;
+      transform: scale(1.03);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .result-item::before {
+      content: "📄";
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .result-item span {
+      color: #555;
+      font-size: 14px;
+    }
+
+   
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .search-box {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="search-container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for blogs...">
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="Technology">Technology</option>
+        <option value="Health">Health</option>
+        <option value="Education">Education</option>
+      </select>
+    </div>
+    <div class="results-container" id="resultsContainer">
+      <!-- Results will dynamically display here -->
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      { title: "JavaScript Basics", category: "Technology" },
+      { title: "Healthy Eating Tips", category: "Health" },
+      { title: "Online Learning Platforms", category: "Education" },
+      { title: "CSS for Beginners", category: "Technology" },
+      { title: "Mental Health Awareness", category: "Health" },
+      { title: "How to Choose a Programming Language", category: "Technology" },
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const resultsContainer = document.getElementById("resultsContainer");
+
+    function renderResults(results) {
+      resultsContainer.innerHTML = "";
+      if (results.length === 0) {
+        resultsContainer.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      results.forEach((item) => {
+        const resultItem = document.createElement("div");
+        resultItem.className = "result-item";
+        resultItem.innerHTML = `
+          <div>${item.title}</div>
+          <span>${item.category}</span>
+        `;
+        resultsContainer.appendChild(resultItem);
+      });
+    }
+
+    function filterResults() {
+      const query = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+
+      const filteredResults = data.filter((item) => {
+        const matchesQuery = item.title.toLowerCase().includes(query);
+        const matchesCategory =
+          category === "all" || item.category === category;
+        return matchesQuery && matchesCategory;
+      });
+
+      renderResults(filteredResults);
+    }
+
+    searchInput.addEventListener("input", filterResults);
+    categoryFilter.addEventListener("change", filterResults);
+
+    renderResults(data);
+  </script>
+</body>
+</html>
